@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Connect | Task 7</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <div class="brand">Developer<span>Connect</span></div>
+    <span class="tag">COGNIFYZ · TASK 7</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">LEVEL 4 · EXPERT</p>
+      <h1>Connect with the developer ecosystem.</h1>
+      <p>Explore GitHub profiles using an external API, secure OAuth login and protected API requests.</p>
+      <% if (message) { %>
+        <div class="notice"><%= message %></div>
+      <% } %>
+      <% if (user) { %>
+        <div class="notice success">Signed in as <strong><%= user.username %></strong></div>
+        <a class="button secondary" href="/auth/logout">Logout</a>
+      <% } else { %>
+        <a class="button" href="/auth/github">Continue with GitHub</a>
+        <% if (!oauthEnabled) { %>
+          <p class="hint">OAuth demo mode: configure GitHub credentials in .env to activate login.</p>
+        <% } %>
+      <% } %>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">EXTERNAL API INTEGRATION</p>
+      <h2>GitHub Profile Explorer</h2>
+      <p>Enter a GitHub username to retrieve live public profile information.</p>
+      <div class="search-row">
+        <input id="username" type="text" placeholder="Example: octocat" maxlength="39">
+        <button id="searchButton">Search Profile</button>
+      </div>
+      <div id="result" class="result" aria-live="polite">Your GitHub profile result will appear here.</div>
+    </section>
+
+    <section class="features">
+      <article><h3>OAuth 2.0</h3><p>GitHub authentication using Passport strategy.</p></article>
+      <article><h3>Rate Limiting</h3><p>API requests are limited to 10 per minute.</p></article>
+      <article><h3>Error Handling</h3><p>Validation, API errors and server errors are handled.</p></article>
+    </section>
+  </main>
+
+  <footer>Developer Connect · Full Stack Internship Project</footer>
+
+  <script>
+    const button = document.getElementById("searchButton");
+    const input = document.getElementById("username");
+    const result = document.getElementById("result");
+
+    button.addEventListener("click", async () => {
+      const username = input.value.trim();
+
+      if (!username) {
+        result.textContent = "Please enter a GitHub username.";
+        return;
+      }
+
+      button.disabled = true;
+      result.textContent = "Loading GitHub profile...";
+
+      try {
+        const response = await fetch(
+          "/api/github/" + encodeURIComponent(username)
+        );
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || "Unable to load profile.");
+        }
+
+        const user = data.user;
+        result.replaceChildren();
+
+        const heading = document.createElement("h3");
+        heading.textContent = user.name || user.username;
+
+        const details = document.createElement("p");
+        details.textContent =
+          "Username: " + user.username +
+          " | Public repositories: " + user.publicRepos +
+          " | Followers: " + user.followers;
+
+        const bio = document.createElement("p");
+        bio.textContent = user.bio || "No public bio available.";
+
+        const link = document.createElement("a");
+        link.href = user.profileUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "View GitHub Profile";
+
+        result.append(heading, details, bio, link);
+      } catch (error) {
+        result.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

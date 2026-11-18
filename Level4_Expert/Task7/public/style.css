@@ -1,0 +1,86 @@
+﻿* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f3f5fb;
+  color: #20243a;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 8%;
+  background: #171b34;
+  color: white;
+}
+.brand { font-size: 22px; font-weight: 800; }
+.brand span { color: #8e9cff; }
+.tag, .eyebrow { font-size: 11px; letter-spacing: 2px; font-weight: 800; }
+main { width: min(1000px, 90%); margin: 45px auto; }
+.hero {
+  padding: 48px;
+  border-radius: 20px;
+  color: white;
+  background: linear-gradient(120deg, #242b55, #5866b8);
+}
+.hero h1 { max-width: 650px; font-size: clamp(30px, 5vw, 48px); margin: 12px 0; }
+.hero p { line-height: 1.7; }
+.button, button {
+  display: inline-block;
+  border: 0;
+  border-radius: 9px;
+  padding: 13px 20px;
+  background: #8493ff;
+  color: #171b34;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+.secondary { background: white; }
+.hint { font-size: 13px; }
+.notice {
+  margin: 18px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff1cf;
+  color: #604700;
+}
+.notice.success { background: #d8f8e8; color: #145b39; }
+.panel, .features article {
+  margin-top: 25px;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px #20243a0c;
+}
+.panel h2 { margin-top: 8px; }
+.search-row { display: flex; gap: 10px; margin-top: 20px; }
+input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid #ccd1e2;
+  border-radius: 9px;
+  font-size: 15px;
+}
+button:disabled { opacity: .6; cursor: wait; }
+.result {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 10px;
+  background: #f3f5fb;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.result a { color: #4354bd; font-weight: 700; }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.features article { margin-top: 20px; }
+.features p { color: #646b82; line-height: 1.6; }
+footer { text-align: center; padding: 25px; color: #737990; }
+@media (max-width: 650px) {
+  header { padding: 18px 5%; }
+  main { margin: 25px auto; }
+  .hero { padding: 28px; }
+  .search-row { flex-direction: column; }
+  .features { grid-template-columns: 1fr; }
+}

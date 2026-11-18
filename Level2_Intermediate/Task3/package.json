@@ -1,0 +1,13 @@
+{
+  "name": "cognifyz-task3",
+  "version": "1.0.0",
+  "description": "Cognifyz Internship Task 3 - Responsive Design",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^7.0.2",
+    "express": "^5.3.0"
+  }
+}

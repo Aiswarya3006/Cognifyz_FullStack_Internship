@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow | Background Job Manager</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="header">
+    <div>
+      <p class="eyebrow">COGNIFYZ · TASK 8 · LEVEL 4 EXPERT</p>
+      <h1>TaskFlow</h1>
+      <p>Middleware, background jobs and intelligent caching</p>
+    </div>
+    <span class="status">● System Online</span>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h2>Background Job Management</h2>
+      <p>Create tasks, track progress and monitor scheduled background processing.</p>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card">
+        <span>Total Jobs</span>
+        <strong><%= dashboard.totalJobs %></strong>
+      </article>
+      <article class="stat-card">
+        <span>Completed</span>
+        <strong><%= dashboard.completedJobs %></strong>
+      </article>
+      <article class="stat-card">
+        <span>Pending</span>
+        <strong><%= dashboard.pendingJobs %></strong>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Create a Background Task</h2>
+      <form action="/jobs" method="POST" class="job-form">
+        <input type="text" name="title" placeholder="Enter a task title..." required maxlength="100">
+        <button type="submit">Add Task</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <h2>Task Queue</h2>
+        <span><%= jobs.length %> tasks</span>
+      </div>
+
+      <% if (jobs.length === 0) { %>
+        <p class="empty">No tasks yet. Add your first task above.</p>
+      <% } else { %>
+        <div class="job-list">
+          <% jobs.forEach(job => { %>
+            <article class="job-item">
+              <div>
+                <strong><%= job.title %></strong>
+                <small>Created: <%= job.createdAt %></small>
+              </div>
+              <% if (job.status === "Completed") { %>
+                <span class="completed">Completed</span>
+              <% } else { %>
+                <form action="/jobs/<%= job.id %>/complete" method="POST">
+                  <button class="complete-button" type="submit">Mark Complete</button>
+                </form>
+              <% } %>
+            </article>
+          <% }); %>
+        </div>
+      <% } %>
+    </section>
+
+    <section class="panel technical">
+      <h2>System Monitoring</h2>
+      <p><strong>Background scheduler:</strong> Every minute</p>
+      <p><strong>Cache duration:</strong> 30 seconds</p>
+      <p><strong>Dashboard cache:</strong> <%= dashboard.cacheStatus %></p>
+      <p><strong>Last data refresh:</strong> <%= dashboard.lastUpdated %></p>
+      <p><strong>Request ID:</strong> <code><%= requestId %></code></p>
+      <div class="api-links">
+        <a href="/api/dashboard" target="_blank">Dashboard API</a>
+        <a href="/api/health" target="_blank">Health Check API</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>TaskFlow · Full Stack Development Internship Project</footer>
+</body>
+</html>

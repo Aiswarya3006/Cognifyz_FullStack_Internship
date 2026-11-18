@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Task 2 - Student Registration</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="container">
+<h1>Student Registration</h1>
+<p>Task 2 - Form Validation and Temporary Storage</p>
+<% if (message) { %><p class="success"><%= message %></p><% } %>
+<% if (error) { %><p class="error"><%= error %></p><% } %>
+<form action="/register" method="POST" onsubmit="return confirm('Submit registration?')">
+<label>Full Name</label>
+<input name="name" minlength="2" maxlength="60" required>
+<label>Email</label>
+<input type="email" name="email" required>
+<label>Course</label>
+<select name="course" required>
+<option value="">Select course</option>
+<option>Full Stack Development</option>
+<option>Web Development</option>
+<option>Python Development</option>
+</select>
+<button type="submit">Register</button>
+</form>
+<h2>Registered Students</h2>
+<% if (!students.length) { %><p>No registrations yet.</p><% } %>
+<% students.forEach(s => { %>
+<div class="student"><strong><%= s.name %></strong><p><%= s.email %></p><p><%= s.course %></p></div>
+<% }) %>
+</main>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 6 - Secure Student Portal</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="container">
+  <h1>Secure Student Portal</h1>
+  <p>Task 6 - Database and Authentication</p>
+
+  <% if (message) { %><p class="success"><%= message %></p><% } %>
+  <% if (error) { %><p class="error"><%= error %></p><% } %>
+
+  <% if (user) { %>
+    <section class="panel">
+      <h2>Welcome, <%= user.name %>!</h2>
+      <p>Email: <%= user.email %></p>
+      <p>Role: <%= user.role %></p>
+      <p>Your account is authenticated.</p>
+      <a href="/api/profile">View Profile API</a>
+      <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+      </form>
+    </section>
+  <% } else { %>
+    <div class="grid">
+      <section class="panel">
+        <h2>Create Account</h2>
+        <form action="/register" method="POST">
+          <label>Name</label>
+          <input name="name" minlength="2" maxlength="60" required>
+          <label>Email</label>
+          <input type="email" name="email" required>
+          <label>Password</label>
+          <input type="password" name="password" minlength="8" required>
+          <button type="submit">Register</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+          <label>Email</label>
+          <input type="email" name="email" required>
+          <label>Password</label>
+          <input type="password" name="password" required>
+          <button type="submit">Login</button>
+        </form>
+      </section>
+    </div>
+  <% } %>
+</main>
+</body>
+</html>

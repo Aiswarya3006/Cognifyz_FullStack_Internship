@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>Student Portal | Cognifyz</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .password-strength {
+      height: 7px;
+      background: #e5e7eb;
+      border-radius: 10px;
+      margin-top: 9px;
+      overflow: hidden;
+    }
+    .strength-bar {
+      height: 100%;
+      width: 0;
+      transition: width .25s ease, background .25s ease;
+    }
+    .strength-weak { background: #dc2626; }
+    .strength-medium { background: #f59e0b; }
+    .strength-strong { background: #16a34a; }
+    #strengthText { display: block; margin-top: 6px; }
+    .page-view[hidden] { display: none !important; }
+    .route-links {
+      display: flex;
+      gap: 12px;
+      margin: 12px 0;
+    }
+    .route-links a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#top">
+      <span class="brand-mark">C</span>
+      <span><strong>Cognifyz</strong><small>LEARNING PORTAL</small></span>
+    </a>
+
+    <p class="sidebar-label">WORKSPACE</p>
+    <a href="#register" class="nav-item active" data-route="register">▦ Student Registration</a>
+    <a href="#students" class="nav-item" data-route="students">▤ Registered Students</a>
+
+    <div class="sidebar-note">
+      <span class="note-dot"></span>
+      <div><strong>Development Demo</strong><p>Full Stack Internship</p></div>
+    </div>
+    <div class="sidebar-footer">COGNIFYZ TECHNOLOGIES</div>
+  </aside>
+
+  <main class="main-content" id="top">
+    <header class="topbar">
+      <div>
+        <p class="breadcrumb">Workspace / Students</p>
+        <h1>Student Management</h1>
+      </div>
+      <div class="topbar-status"><span class="status-dot"></span>Registration Portal</div>
+    </header>
+
+    <section class="welcome-banner">
+      <div>
+        <p class="eyebrow">STUDENT ENROLLMENT</p>
+        <h2>Build your next skill.</h2>
+        <p>Register for a course and take the next step in your learning journey.</p>
+      </div>
+      <div class="banner-decoration" aria-hidden="true">✦</div>
+    </section>
+
+    <% if (message) { %>
+      <div class="alert success-message" role="status">
+        <strong>✓ Registration successful</strong>
+        <p><%= message %></p>
+      </div>
+    <% } %>
+
+    <% if (error) { %>
+      <div class="alert error-message" role="alert">
+        <strong>Unable to register</strong>
+        <p><%= error %></p>
+      </div>
+    <% } %>
+
+    <div class="route-links">
+      <a href="#register" data-route="register">Registration</a>
+      <a href="#students" data-route="students">Student Records</a>
+    </div>
+
+    <section class="content-grid page-view" id="register">
+      <article class="panel registration-panel">
+        <div class="panel-heading">
+          <div class="heading-icon">＋</div>
+          <div><h2>New Registration</h2><p>Enter the student's details below.</p></div>
+        </div>
+
+        <form action="/register" method="POST" id="registrationForm" novalidate>
+          <div class="field-group">
+            <label for="name">Full name <span>*</span></label>
+            <input type="text" id="name" name="name"
+              placeholder="e.g. Arun Kumar" minlength="2"
+              maxlength="60" autocomplete="name" required>
+            <small id="nameFeedback" class="field-feedback">Enter at least 2 characters.</small>
+          </div>
+
+          <div class="field-group">
+            <label for="email">Email address <span>*</span></label>
+            <input type="email" id="email" name="email"
+              placeholder="you@example.com" autocomplete="email" required>
+            <small id="emailFeedback" class="field-feedback">Use a valid email address.</small>
+          </div>
+
+          <div class="field-group">
+            <label for="phone">Phone number <span>*</span></label>
+            <input type="tel" id="phone" name="phone"
+              placeholder="10-digit phone number" maxlength="10"
+              inputmode="numeric" autocomplete="tel" required>
+            <small id="phoneFeedback" class="field-feedback">Enter exactly 10 digits.</small>
+          </div>
+
+          <!-- TASK 4: Password and strength validation -->
+          <div class="field-group">
+            <label for="password">Password <span>*</span></label>
+            <input type="password" id="password" name="password"
+              placeholder="Create a strong password"
+              minlength="8" autocomplete="new-password" required>
+            <div class="password-strength">
+              <div id="strengthBar" class="strength-bar"></div>
+            </div>
+            <small id="strengthText" aria-live="polite">Use at least 8 characters.</small>
+          </div>
+
+          <div class="field-group">
+            <label for="course">Select course <span>*</span></label>
+            <select id="course" name="course" required>
+              <option value="">Choose a course</option>
+              <option value="Full Stack Development">Full Stack Development</option>
+              <option value="Python Development">Python Development</option>
+              <option value="Web Development">Web Development</option>
+            </select>
+            <small id="courseFeedback" class="field-feedback">Choose your preferred course.</small>
+          </div>
+
+          <div class="field-group" id="interestGroup" hidden>
+            <label for="interest">Course interest</label>
+            <input type="text" id="interest" name="interest"
+              maxlength="150" placeholder="What would you like to learn?">
+            <small id="interestHint">Tell us what you want to learn in this course.</small>
+          </div>
+
+          <div class="field-group">
+            <label for="experience">Experience level</label>
+            <select id="experience" name="experience">
+              <option value="">Choose your level</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+
+          <fieldset class="skills-field">
+            <legend>Skills you are interested in</legend>
+            <p class="skills-description">Select any skills you want to develop.</p>
+            <div class="skills-grid">
+              <label class="skill-option"><input type="checkbox" name="skills" value="HTML & CSS"><span>HTML &amp; CSS</span></label>
+              <label class="skill-option"><input type="checkbox" name="skills" value="JavaScript"><span>JavaScript</span></label>
+              <label class="skill-option"><input type="checkbox" name="skills" value="Node.js"><span>Node.js</span></label>
+              <label class="skill-option"><input type="checkbox" name="skills" value="Python"><span>Python</span></label>
+              <label class="skill-option"><input type="checkbox" name="skills" value="Database"><span>Database</span></label>
+            </div>
+            <small id="skillsFeedback" class="field-feedback" aria-live="polite"></small>
+          </fieldset>
+
+          <p id="clientError" class="client-error" role="alert" hidden></p>
+
+          <button type="submit" class="primary-button">
+            Submit Registration <span>→</span>
+          </button>
+          <p class="required-note"><span>*</span> Required fields</p>
+        </form>
+      </article>
+
+      <aside class="panel guidance-panel">
+        <div class="guidance-top">
+          <span class="guidance-icon">✦</span>
+          <span class="guidance-tag">GET STARTED</span>
+        </div>
+        <h2>Your learning journey starts here.</h2>
+        <p class="guidance-description">Choose a course that matches your interests and begin developing practical skills.</p>
+        <div class="guidance-divider"></div>
+        <div class="guidance-item"><span class="guidance-number">01</span><div><strong>Enter your details</strong><p>Provide your name, email and phone.</p></div></div>
+        <div class="guidance-item"><span class="guidance-number">02</span><div><strong>Choose your learning path</strong><p>Select a course and experience level.</p></div></div>
+        <div class="guidance-item"><span class="guidance-number">03</span><div><strong>Submit registration</strong><p>Your entry appears in the student list.</p></div></div>
+        <div class="guidance-footer">✓ Client-side and server-side validation enabled</div>
+      </aside>
+    </section>
+
+    <!-- TASK 5: REST API student list -->
+    <section class="panel students-panel page-view" id="students" hidden>
+      <div class="students-header">
+        <div>
+          <p class="eyebrow">ENROLLMENT RECORDS</p>
+          <h2>Registered Students</h2>
+          <p class="panel-description">Live records loaded from the REST API.</p>
+        </div>
+        <div class="total-count">
+          <span class="count-number" id="totalCount">0</span>
+          <span class="count-label">TOTAL STUDENTS</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <button type="button" id="refreshStudents" class="primary-button"
+          style="width:auto;padding:10px 18px;">Refresh Students ↻</button>
+      </div>
+      <p id="apiMessage" role="status" aria-live="polite"></p>
+      <div id="studentList">
+        <div class="empty-state"><div class="empty-icon">▤</div><h3>Loading student records...</h3></div>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>© 2026 Cognifyz Technologies</span>
+      <span>Student Management Portal · Development Preview</span>
+    </footer>
+  </main>
+</div>
+
+<script>
+  const form = document.getElementById("registrationForm");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const phoneInput = document.getElementById("phone");
+  const passwordInput = document.getElementById("password");
+  const courseInput = document.getElementById("course");
+  const interestGroup = document.getElementById("interestGroup");
+  const clientError = document.getElementById("clientError");
+
+  function showFeedback(input, feedbackId, message, isValid) {
+    const feedback = document.getElementById(feedbackId);
+    feedback.textContent = message;
+    feedback.classList.toggle("feedback-error", !isValid);
+    feedback.classList.toggle("feedback-success", isValid);
+    input.classList.toggle("input-invalid", !isValid);
+    input.classList.toggle("input-valid", isValid);
+    return isValid;
+  }
+
+  function validateName() {
+    const value = nameInput.value.trim();
+    return showFeedback(nameInput, "nameFeedback",
+      value.length >= 2 && value.length <= 60
+        ? "Name looks good." : "Name must contain 2 to 60 characters.",
+      value.length >= 2 && value.length <= 60);
+  }
+
+  function validateEmail() {
+    const value = emailInput.value.trim();
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    return showFeedback(emailInput, "emailFeedback",
+      valid ? "Email format looks good." : "Enter a valid email address.", valid);
+  }
+
+  function validatePhone() {
+    const valid = /^[0-9]{10}$/.test(phoneInput.value.trim());
+    return showFeedback(phoneInput, "phoneFeedback",
+      valid ? "Phone number looks good." : "Enter exactly 10 digits.", valid);
+  }
+
+  // TASK 4: Password strength checker
+  function checkPasswordStrength() {
+    const value = passwordInput.value;
+    let score = 0;
+
+    if (value.length >= 8) score++;
+    if (/[A-Z]/.test(value)) score++;
+    if (/[a-z]/.test(value)) score++;
+    if (/[0-9]/.test(value)) score++;
+    if (/[^A-Za-z0-9]/.test(value)) score++;
+
+    const bar = document.getElementById("strengthBar");
+    const text = document.getElementById("strengthText");
+
+    bar.className = "strength-bar";
+
+    if (!value) {
+      bar.style.width = "0";
+      text.textContent = "Use at least 8 characters.";
+      return false;
+    }
+
+    if (score <= 2) {
+      bar.style.width = "33%";
+      bar.classList.add("strength-weak");
+      text.textContent = "Weak password – add uppercase, numbers and symbols.";
+    } else if (score <= 4) {
+      bar.style.width = "66%";
+      bar.classList.add("strength-medium");
+      text.textContent = "Medium password – improve it further.";
+    } else {
+      bar.style.width = "100%";
+      bar.classList.add("strength-strong");
+      text.textContent = "Strong password!";
+    }
+
+    return value.length >= 8 && score >= 4;
+  }
+
+  function updateInterestField() {
+    const selectedCourse = courseInput.value;
+    interestGroup.hidden = !selectedCourse;
+
+    const hints = {
+      "Full Stack Development": "Example: frontend, backend and APIs.",
+      "Python Development": "Example: Python basics, Django and automation.",
+      "Web Development": "Example: responsive websites and JavaScript."
+    };
+
+    document.getElementById("interestHint").textContent =
+      hints[selectedCourse] || "Tell us what you want to learn in this course.";
+  }
+
+  nameInput.addEventListener("input", validateName);
+  emailInput.addEventListener("input", validateEmail);
+
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+    validatePhone();
+  });
+
+  passwordInput.addEventListener("input", checkPasswordStrength);
+  courseInput.addEventListener("change", updateInterestField);
+
+  form.addEventListener("submit", (event) => {
+    const nameValid = validateName();
+    const emailValid = validateEmail();
+    const phoneValid = validatePhone();
+    const passwordValid = checkPasswordStrength();
+    const courseValid = courseInput.value !== "";
+
+    if (!courseValid) {
+      document.getElementById("courseFeedback").textContent = "Please choose a course.";
+      document.getElementById("courseFeedback").classList.add("feedback-error");
+    }
+
+    const valid = nameValid && emailValid && phoneValid &&
+      passwordValid && courseValid;
+
+    if (!valid) {
+      event.preventDefault();
+      clientError.textContent =
+        "Please fix the highlighted fields. Password must be strong.";
+      clientError.hidden = false;
+
+      const firstInvalid = form.querySelector(".input-invalid") ||
+        (!passwordValid ? passwordInput : null) ||
+        (!courseValid ? courseInput : null);
+
+      if (firstInvalid) firstInvalid.focus();
+    } else {
+      clientError.hidden = true;
+    }
+  });
+
+  // TASK 4: Simple client-side navigation with browser history
+  function navigateTo(route) {
+    const validRoute = route === "students" ? "students" : "register";
+
+    document.querySelectorAll(".page-view").forEach(section => {
+      section.hidden = section.id !== validRoute;
+    });
+
+    document.querySelectorAll("[data-route]").forEach(link => {
+      link.classList.toggle("active", link.dataset.route === validRoute);
+    });
+
+    if (validRoute === "students") loadStudents();
+  }
+
+  document.querySelectorAll("[data-route]").forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+      const route = link.dataset.route;
+      history.pushState({ route }, "", "#" + route);
+      navigateTo(route);
+    });
+  });
+
+  window.addEventListener("popstate", event => {
+    const route = event.state?.route ||
+      (location.hash === "#students" ? "students" : "register");
+    navigateTo(route);
+  });
+
+  // TASK 5: Fetch and display students from REST API
+  async function loadStudents() {
+    const studentList = document.getElementById("studentList");
+    const totalCount = document.getElementById("totalCount");
+    const apiMessage = document.getElementById("apiMessage");
+
+    studentList.textContent = "Loading student records...";
+    apiMessage.textContent = "";
+
+    try {
+      const response = await fetch("/api/registrations");
+      if (!response.ok) throw new Error("Unable to fetch student records.");
+
+      const result = await response.json();
+      const students = result.data || [];
+
+      totalCount.textContent = result.count ?? students.length;
+      studentList.replaceChildren();
+
+      if (students.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+
+        const icon = document.createElement("div");
+        icon.className = "empty-icon";
+        icon.textContent = "▤";
+
+        const heading = document.createElement("h3");
+        heading.textContent = "No student records yet";
+
+        const description = document.createElement("p");
+        description.textContent = "Submit a registration to see student details here.";
+
+        empty.append(icon, heading, description);
+        studentList.appendChild(empty);
+        return;
+      }
+
+      const container = document.createElement("div");
+      container.className = "table-container";
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+
+      ["STUDENT", "EMAIL", "PHONE", "COURSE", "EXPERIENCE",
+        "SKILLS", "STATUS", "ACTION"].forEach(heading => {
+        const th = document.createElement("th");
+        th.textContent = heading;
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      const tbody = document.createElement("tbody");
+
+      students.forEach((student, index) => {
+        const row = document.createElement("tr");
+
+        const studentCell = document.createElement("td");
+        const studentDiv = document.createElement("div");
+        studentDiv.className = "student-cell";
+
+        const avatar = document.createElement("span");
+        avatar.className = "avatar";
+        avatar.textContent = (student.name || "?").charAt(0).toUpperCase();
+
+        const studentInfo = document.createElement("div");
+        const studentName = document.createElement("strong");
+        studentName.textContent = student.name || "Unknown";
+
+        const studentNumber = document.createElement("small");
+        studentNumber.textContent = "Student " + String(index + 1).padStart(3, "0");
+
+        studentInfo.append(studentName, studentNumber);
+        studentDiv.append(avatar, studentInfo);
+        studentCell.appendChild(studentDiv);
+
+        const email = document.createElement("td");
+        email.className = "email-cell";
+        email.textContent = student.email || "—";
+
+        const phone = document.createElement("td");
+        phone.textContent = student.phone || "—";
+
+        const courseCell = document.createElement("td");
+        const course = document.createElement("span");
+        course.className = "course-pill";
+        course.textContent = student.course || "—";
+        courseCell.appendChild(course);
+
+        const experience = document.createElement("td");
+        experience.textContent = student.experience || "—";
+
+        const skills = document.createElement("td");
+        skills.textContent = Array.isArray(student.skills) && student.skills.length
+          ? student.skills.join(", ") : "—";
+
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        status.className = "registered-status";
+        const statusDot = document.createElement("span");
+        status.append(statusDot, document.createTextNode(" Registered"));
+        statusCell.appendChild(status);
+
+        const actionCell = document.createElement("td");
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete";
+        deleteButton.style.padding = "7px 12px";
+        deleteButton.style.border = "1px solid #dc2626";
+        deleteButton.style.borderRadius = "6px";
+        deleteButton.style.color = "#dc2626";
+        deleteButton.style.background = "transparent";
+        deleteButton.style.cursor = "pointer";
+        deleteButton.addEventListener("click", () => deleteStudent(student.id));
+        actionCell.appendChild(deleteButton);
+
+        row.append(studentCell, email, phone, courseCell,
+          experience, skills, statusCell, actionCell);
+        tbody.appendChild(row);
+      });
+
+      table.append(thead, tbody);
+      container.appendChild(table);
+      studentList.appendChild(container);
+
+    } catch (error) {
+      studentList.textContent = "Could not load student records.";
+      apiMessage.textContent = error.message;
+      totalCount.textContent = "0";
+    }
+  }
+
+  // TASK 5: Delete student using REST API
+  async function deleteStudent(id) {
+    if (!confirm("Are you sure you want to delete this student?")) return;
+
+    const apiMessage = document.getElementById("apiMessage");
+
+    try {
+      const response = await fetch(
+        "/api/registrations/" + encodeURIComponent(id),
+        { method: "DELETE" }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Unable to delete student.");
+      }
+
+      apiMessage.textContent = "Student deleted successfully.";
+      await loadStudents();
+
+    } catch (error) {
+      apiMessage.textContent = error.message;
+    }
+  }
+
+  document.getElementById("refreshStudents")
+    .addEventListener("click", loadStudents);
+
+  updateInterestField();
+
+  const initialRoute = location.hash === "#students" ? "students" : "register";
+  history.replaceState({ route: initialRoute }, "", "#" + initialRoute);
+  navigateTo(initialRoute);
+</script>
+</body>
+</html>
